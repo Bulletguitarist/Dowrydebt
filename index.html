@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DowryDebt Watch - India's Dowry Financial Abuse Evidence Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<style>
+
+
+:root{
+  --crim:#C4384E;--crim-d:#9B2335;--crim-glow:rgba(196,56,78,0.25);
+  --crim-p:rgba(196,56,78,0.08);
+  --gold:#D4A647;--gold-l:rgba(212,166,71,0.1);
+  --bg:#0E0C0C;--bg2:#151212;--bg3:#1C1818;--bg4:#241F1F;
+  --surface:#1E1919;--surface2:#252020;--surface3:#2D2828;
+  --ink:#F2EDE8;--ink-m:#C4B8B0;--ink-s:#8A7B75;--ink-t:rgba(242,237,232,0.15);
+  --sage:#3D9970;--sage-l:rgba(61,153,112,0.12);
+  --blue:#4A8FD4;--blue-l:rgba(74,143,212,0.12);
+  --border:rgba(242,237,232,0.08);--border2:rgba(242,237,232,0.04);
+  --fd:'Libre Baskerville',Georgia,serif;
+  --fb:'Plus Jakarta Sans',system-ui,sans-serif;
+  --sh-sm:0 1px 8px rgba(0,0,0,.4);
+  --sh-md:0 4px 24px rgba(0,0,0,.5);
+  --sh-lg:0 16px 64px rgba(0,0,0,.6);
+  --sh-glow:0 0 40px rgba(196,56,78,0.12);
+  --r-sm:8px;--r-md:12px;--r-lg:16px;--r-xl:20px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--bg);color:var(--ink);overflow-x:hidden;line-height:1.6}
+::selection{background:var(--crim-glow);color:var(--ink)}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
+
+/* ── NAV ── */
+nav{
+  position:sticky;top:0;z-index:200;
+  background:rgba(14,12,12,0.85);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2.5rem;height:64px;
+}
+.nav-logo{
+  display:flex;align-items:center;gap:12px;
+  font-family:var(--fd);font-size:1.15rem;font-weight:700;
+  color:var(--ink);text-decoration:none;cursor:pointer;letter-spacing:.01em;
+}
+.nav-logo-mark{
+  width:34px;height:34px;background:var(--crim);border-radius:9px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  box-shadow:0 0 16px rgba(196,56,78,0.4);
+}
+.nav-logo-mark svg{width:20px;height:20px}
+.nav-links{display:flex;gap:2rem}
+.nav-links a{
+  color:var(--ink-s);font-size:.82rem;font-weight:500;cursor:pointer;
+  text-decoration:none;transition:color .18s;padding:.25rem 0;
+  position:relative;letter-spacing:.02em;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-2px;left:0;right:0;height:1px;
+  background:var(--crim);transform:scaleX(0);transition:transform .2s;
+}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1)}
+.nav-links a.active{color:var(--ink)}
+.nav-cta{
+  background:var(--crim);color:#fff;padding:.5rem 1.25rem;border-radius:var(--r-sm);
+  font-size:.8rem;font-weight:600;cursor:pointer;border:none;
+  transition:all .2s;letter-spacing:.02em;
+  box-shadow:0 0 20px rgba(196,56,78,0.3);
+}
+.nav-cta:hover{background:var(--crim-d);box-shadow:0 0 28px rgba(196,56,78,0.45);transform:translateY(-1px)}
+
+/* ── PAGE SHELL ── */
+.page{display:none;min-height:calc(100vh - 64px);animation:fadeIn .35s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── HERO ── */
+.hero{
+  display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:4rem;
+  padding:5rem 4rem;position:relative;overflow:hidden;
+  min-height:calc(100vh - 64px);
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 60% at 70% 40%,rgba(196,56,78,0.06) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-grid-bg{
+  position:absolute;inset:0;pointer-events:none;opacity:0.03;
+  background-image:linear-gradient(var(--ink) 1px,transparent 1px),linear-gradient(90deg,var(--ink) 1px,transparent 1px);
+  background-size:48px 48px;
+}
+.hero-content{position:relative;z-index:1}
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(196,56,78,0.1);color:var(--crim);
+  font-size:.68rem;font-weight:600;letter-spacing:.1em;
+  padding:.35rem 1rem;border-radius:20px;text-transform:uppercase;
+  border:1px solid rgba(196,56,78,0.2);margin-bottom:1.75rem;
+}
+.badge-dot{width:5px;height:5px;border-radius:50%;background:var(--crim);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 4px var(--crim)}50%{opacity:.3;box-shadow:none}}
+.hero h1{
+  font-family:var(--fd);font-size:clamp(2.2rem,3.8vw,3.4rem);font-weight:700;
+  line-height:1.1;margin-bottom:1.5rem;color:var(--ink);letter-spacing:-.01em;
+}
+.hero h1 em{color:var(--crim);font-style:italic}
+.hero p{font-size:.95rem;color:var(--ink-m);line-height:1.85;max-width:440px;margin-bottom:2.5rem}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap}
+.btn-primary{
+  background:var(--crim);color:#fff;padding:.8rem 1.75rem;border-radius:var(--r-sm);
+  font-weight:600;font-size:.85rem;border:none;cursor:pointer;transition:all .22s;
+  display:inline-flex;align-items:center;gap:8px;letter-spacing:.02em;
+  box-shadow:0 0 20px rgba(196,56,78,0.3);
+}
+.btn-primary:hover{background:var(--crim-d);transform:translateY(-2px);box-shadow:0 0 32px rgba(196,56,78,0.5)}
+.btn-ghost{
+  background:transparent;color:var(--ink-m);padding:.8rem 1.75rem;border-radius:var(--r-sm);
+  font-weight:500;font-size:.85rem;border:1px solid var(--border);cursor:pointer;transition:all .2s;
+  letter-spacing:.02em;
+}
+.btn-ghost:hover{border-color:rgba(196,56,78,0.4);color:var(--ink);background:var(--crim-p)}
+.hero-visual{position:relative;z-index:1}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.stat-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r-lg);padding:1.5rem;position:relative;overflow:hidden;
+  transition:border-color .2s,box-shadow .2s;
+}
+.stat-card:hover{border-color:rgba(196,56,78,0.25);box-shadow:var(--sh-glow)}
+.stat-card::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--c,#C4384E),transparent);
+  opacity:0.6;
+}
+.stat-card.c1{--c:#C4384E}.stat-card.c2{--c:#D4A647}.stat-card.c3{--c:#4A8FD4}.stat-card.c4{--c:#3D9970}
+.stat-num{font-family:var(--fd);font-size:2.1rem;font-weight:700;line-height:1;margin-bottom:.35rem}
+.stat-card.c1 .stat-num{color:#C4384E}
+.stat-card.c2 .stat-num{color:#D4A647}
+.stat-card.c3 .stat-num{color:#4A8FD4}
+.stat-card.c4 .stat-num{color:#3D9970}
+.stat-lbl{font-size:.72rem;color:var(--ink-s);line-height:1.5;font-weight:400}
+
+/* ── SECTIONS ── */
+.section{padding:5rem 4rem}
+.section.bg-alt{background:var(--bg2)}
+.sec-head{text-align:center;margin-bottom:3.5rem}
+.sec-head .tag{
+  font-size:.68rem;font-weight:600;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--crim);display:block;margin-bottom:.75rem;
+}
+.sec-head h2{
+  font-family:var(--fd);font-size:clamp(1.8rem,3vw,2.6rem);
+  font-weight:700;color:var(--ink);margin-bottom:.75rem;line-height:1.15;
+}
+.sec-head p{font-size:.9rem;color:var(--ink-s);max-width:500px;margin:0 auto;line-height:1.8}
+
+/* ── HOW IT WORKS ── */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;position:relative}
+.steps::after{
+  content:'';position:absolute;top:28px;
+  left:calc(12.5% + 16px);right:calc(12.5% + 16px);
+  height:1px;background:linear-gradient(90deg,transparent,var(--border),var(--border),transparent);
+}
+.step{text-align:center;position:relative;z-index:1;padding:1.5rem 1rem}
+.step-ico{
+  width:56px;height:56px;border-radius:14px;
+  background:var(--surface);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;color:var(--crim);margin:0 auto 1.1rem;
+  transition:all .2s;
+}
+.step:hover .step-ico{background:var(--crim-p);border-color:rgba(196,56,78,0.3);box-shadow:0 0 20px rgba(196,56,78,0.15)}
+.step h3{font-size:.88rem;font-weight:600;color:var(--ink);margin-bottom:.45rem;letter-spacing:.01em}
+.step p{font-size:.76rem;color:var(--ink-s);line-height:1.7}
+
+/* ── CARDS GRID ── */
+.res-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.res-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r-lg);padding:1.5rem;
+  transition:all .22s;cursor:default;
+}
+.res-card:hover{border-color:rgba(196,56,78,0.2);background:var(--surface2);transform:translateY(-2px);box-shadow:var(--sh-md)}
+.res-ico{
+  width:42px;height:42px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.15rem;margin-bottom:1rem;
+}
+.res-card h3{font-size:.88rem;font-weight:600;color:var(--ink);margin-bottom:.4rem}
+.res-card p{font-size:.76rem;color:var(--ink-s);line-height:1.7;margin-bottom:1rem}
+.res-link{font-size:.76rem;font-weight:600;color:var(--crim);text-decoration:none;transition:color .15s}
+.res-link:hover{color:#E05A6E}
+
+/* ── FORM ── */
+.form-wrap{max-width:720px;margin:0 auto}
+.form-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r-xl);overflow:hidden;box-shadow:var(--sh-lg);
+}
+.form-hdr{
+  background:linear-gradient(135deg,var(--crim-d),var(--crim));
+  padding:1.75rem 2.25rem;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.form-hdr h3{font-family:var(--fd);font-size:1.35rem;font-weight:700;margin-bottom:.35rem;color:#fff}
+.form-hdr p{font-size:.8rem;opacity:.75;color:#fff}
+.trust{display:flex;gap:1.5rem;margin-top:.9rem;flex-wrap:wrap}
+.trust span{font-size:.72rem;font-weight:500;opacity:.85;color:#fff;display:flex;align-items:center;gap:6px}
+.form-body{padding:2rem 2.25rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin-bottom:.75rem}
+.fg{margin-bottom:.9rem}
+.fg label{display:block;font-size:.75rem;font-weight:500;color:var(--ink-m);margin-bottom:.4rem;letter-spacing:.02em}
+.fg label .req{color:var(--crim)}
+.fg input,.fg select,.fg textarea{
+  width:100%;padding:.65rem .9rem;
+  border:1px solid var(--border);border-radius:var(--r-sm);
+  font-family:var(--fb);font-size:.85rem;color:var(--ink);
+  background:var(--bg3);transition:all .18s;outline:none;
+}
+.fg input:focus,.fg select:focus,.fg textarea:focus{
+  border-color:rgba(196,56,78,0.5);box-shadow:0 0 0 3px rgba(196,56,78,0.08);background:var(--bg2)
+}
+.fg select option{background:var(--bg3);color:var(--ink)}
+.fg textarea{min-height:100px;resize:vertical;line-height:1.6}
+.chk-group{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.4rem}
+.chk{
+  display:flex;align-items:center;gap:7px;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:var(--r-sm);padding:.4rem .8rem;
+  cursor:pointer;transition:all .14s;font-size:.76rem;font-weight:500;color:var(--ink-s);user-select:none;
+}
+.chk input{display:none}
+.chk.on{background:var(--crim-p);border-color:rgba(196,56,78,0.4);color:var(--crim)}
+.range-row{display:flex;align-items:center;gap:.85rem}
+.range-row input[type=range]{flex:1;accent-color:var(--crim)}
+.range-val{min-width:72px;text-align:right;font-weight:600;color:var(--crim);font-size:.85rem}
+.priv-note{
+  background:rgba(61,153,112,0.08);border:1px solid rgba(61,153,112,0.15);
+  border-radius:var(--r-sm);padding:.85rem 1rem;font-size:.76rem;
+  color:#5BAF89;margin-bottom:1.25rem;display:flex;gap:9px;
+  align-items:flex-start;line-height:1.65;
+}
+.submit-btn{
+  width:100%;background:var(--crim);color:#fff;padding:.9rem;border-radius:var(--r-sm);
+  border:none;cursor:pointer;font-family:var(--fb);font-size:.9rem;font-weight:600;
+  transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 0 24px rgba(196,56,78,0.3);letter-spacing:.02em;
+}
+.submit-btn:hover:not(:disabled){background:var(--crim-d);transform:translateY(-1px);box-shadow:0 0 32px rgba(196,56,78,0.5)}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.loading{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── DASHBOARD ── */
+.dash-filters{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:2rem}
+.ftag{
+  padding:.3rem .9rem;border-radius:20px;font-size:.72rem;font-weight:500;
+  cursor:pointer;border:1px solid var(--border);color:var(--ink-s);
+  background:var(--surface);transition:all .15s;
+}
+.ftag:hover{border-color:rgba(196,56,78,0.3);color:var(--ink)}
+.ftag.on{background:var(--crim);color:#fff;border-color:var(--crim);box-shadow:0 0 12px rgba(196,56,78,0.3)}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.75rem}
+.kpi{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r-md);padding:1.1rem 1.25rem;transition:all .2s;
+}
+.kpi:hover{border-color:rgba(196,56,78,0.2);box-shadow:var(--sh-glow)}
+.kpi-lbl{font-size:.68rem;font-weight:600;color:var(--ink-s);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.4rem}
+.kpi-val{font-family:var(--fd);font-size:1.9rem;font-weight:700;color:var(--ink);line-height:1;margin-bottom:.25rem}
+.kpi-sub{font-size:.68rem;color:var(--crim);font-weight:500;letter-spacing:.02em}
+.loading-kpi{
+  height:28px;background:linear-gradient(90deg,var(--surface2) 25%,var(--surface3) 50%,var(--surface2) 75%);
+  background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:4px;
+}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.dash-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:1.25rem}
+.panel{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r-lg);padding:1.35rem;
+}
+.panel-title{
+  font-size:.78rem;font-weight:600;color:var(--ink-m);margin-bottom:1.1rem;
+  display:flex;align-items:center;gap:7px;letter-spacing:.03em;text-transform:uppercase;
+}
+.panel-title i{color:var(--crim);font-size:.9rem}
+.panel.full{grid-column:1/-1}
+
+/* D3 */
+.bar-d3 rect.bar{transition:opacity .15s}
+.bar-d3 rect.bar:hover{opacity:.7}
+.bar-d3 .axis text{font-size:10px;fill:var(--ink-s);font-family:var(--fb)}
+.bar-d3 .axis path,.bar-d3 .axis line{stroke:var(--border)}
+.line-d3 path.line{fill:none;stroke:var(--crim);stroke-width:2}
+.line-d3 circle.dot{fill:var(--crim);stroke:var(--surface);stroke-width:2}
+.pie-d3 text{font-size:10px;fill:var(--ink-s);font-family:var(--fb)}
+
+/* Map */
+#india-map{width:100%;height:340px;position:relative;background:var(--bg3);border-radius:var(--r-md);overflow:hidden}
+#india-map svg{width:100%;height:100%}
+.map-tooltip{
+  position:absolute;background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--r-sm);padding:.6rem .9rem;font-size:.73rem;pointer-events:none;
+  box-shadow:var(--sh-md);display:none;z-index:50;max-width:200px;color:var(--ink);
+}
+.map-tooltip strong{display:block;font-size:.8rem;color:var(--ink);margin-bottom:.2rem}
+.map-legend{position:absolute;bottom:12px;right:12px;background:rgba(14,12,12,0.8);border:1px solid var(--border);border-radius:var(--r-sm);padding:.6rem .85rem;font-size:.68rem;color:var(--ink-s)}
+.map-legend-bar{display:flex;align-items:center;gap:6px;margin-top:.35rem}
+.map-legend-grad{width:80px;height:6px;border-radius:3px;background:linear-gradient(to right,rgba(196,56,78,0.2),#C4384E)}
+
+/* Table */
+.data-table{width:100%;border-collapse:collapse;font-size:.78rem}
+.data-table th{font-size:.68rem;font-weight:600;color:var(--ink-s);text-transform:uppercase;letter-spacing:.06em;padding:.65rem .9rem;border-bottom:1px solid var(--border);text-align:left;background:var(--bg3)}
+.data-table td{padding:.65rem .9rem;border-bottom:1px solid var(--border2);color:var(--ink)}
+.data-table tr:hover td{background:var(--surface2)}
+.pill{display:inline-block;padding:.2rem .6rem;border-radius:20px;font-size:.67rem;font-weight:600;letter-spacing:.04em}
+.pill.pending{background:rgba(212,166,71,0.12);color:#D4A647}
+.pill.verified{background:rgba(61,153,112,0.12);color:#3D9970}
+.pill.flagged{background:rgba(196,56,78,0.1);color:var(--crim)}
+.pill.rejected{background:rgba(138,123,117,0.1);color:var(--ink-s)}
+.fraud-meter{display:flex;align-items:center;gap:8px}
+.fraud-bar{flex:1;height:4px;background:var(--bg4);border-radius:2px;overflow:hidden}
+.fraud-fill{height:100%;border-radius:2px;transition:width .5s}
+
+/* ── ADMIN ── */
+.admin-wrap{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 64px)}
+.admin-sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:1.5rem 0;position:sticky;top:64px;height:calc(100vh - 64px);overflow-y:auto}
+.admin-sidebar .logo{padding:.5rem 1.5rem 1.5rem;font-family:var(--fd);font-size:.95rem;color:var(--ink);font-weight:700}
+.admin-sidebar .logo span{display:block;font-family:var(--fb);font-size:.68rem;color:var(--ink-s);font-weight:400;margin-top:.2rem}
+.sidebar-nav a{display:flex;align-items:center;gap:10px;padding:.65rem 1.5rem;color:var(--ink-s);font-size:.8rem;cursor:pointer;transition:all .15s;text-decoration:none;border-left:2px solid transparent}
+.sidebar-nav a:hover,.sidebar-nav a.active{background:var(--crim-p);color:var(--ink);border-left-color:var(--crim)}
+.sidebar-nav a .ico{font-size:1rem;width:18px;display:flex;justify-content:center;color:var(--crim)}
+.admin-content{padding:2rem;background:var(--bg);overflow-y:auto}
+.admin-pane{display:none}
+.admin-pane.active{display:block}
+.admin-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.75rem}
+.admin-head h2{font-family:var(--fd);font-size:1.4rem;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:.5rem}
+.admin-kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.75rem}
+
+/* ── RESOURCES ── */
+.tab-bar{display:flex;gap:.25rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
+.tab{padding:.65rem 1.25rem;cursor:pointer;font-size:.82rem;font-weight:500;color:var(--ink-s);border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .18s;letter-spacing:.02em}
+.tab.on{color:var(--crim);border-bottom-color:var(--crim);font-weight:600}
+.tab:hover{color:var(--ink)}
+
+/* ── MODAL ── */
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:1000;padding:1.5rem}
+.modal-ov.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:2.5rem;max-width:420px;width:100%;text-align:center;box-shadow:var(--sh-lg);animation:popIn .3s ease}
+@keyframes popIn{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-ico{font-size:2.5rem;margin-bottom:.85rem;display:flex;justify-content:center;color:#3D9970}
+.modal h3{font-family:var(--fd);font-size:1.35rem;font-weight:700;color:var(--ink);margin-bottom:.6rem}
+.modal p{font-size:.82rem;color:var(--ink-s);line-height:1.75;margin-bottom:1.25rem}
+.modal-token{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);padding:.65rem 1rem;font-family:monospace;font-size:.85rem;color:var(--crim);letter-spacing:.1em;margin-bottom:1.25rem;word-break:break-all}
+.modal-close{background:var(--crim);color:#fff;border:none;padding:.65rem 2rem;border-radius:var(--r-sm);font-family:var(--fb);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s}
+.modal-close:hover{background:var(--crim-d)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--surface2);color:var(--ink);border:1px solid var(--border);padding:.75rem 1.25rem;border-radius:var(--r-md);font-size:.8rem;font-weight:500;box-shadow:var(--sh-lg);z-index:2000;transform:translateY(10px);opacity:0;transition:all .3s;pointer-events:none}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* PROBLEM PAGE */
+.problem-list li{display:flex;gap:1.25rem;padding:1.5rem 0;border-bottom:1px solid var(--border);list-style:none}
+.problem-ico{width:40px;height:40px;border-radius:10px;background:var(--crim-p);border:1px solid rgba(196,56,78,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--crim);font-size:1rem;margin-top:.15rem}
+
+/* FOOTER */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:3.5rem 4rem 2rem}
+.footer-g{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:2.5rem}
+.footer-brand h4{font-family:var(--fd);font-size:1.1rem;font-weight:700;margin-bottom:.65rem;color:var(--ink)}
+.footer-brand p{font-size:.76rem;color:var(--ink-s);line-height:1.75}
+.footer-col h5{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-s);margin-bottom:.9rem}
+.footer-col a{display:block;font-size:.76rem;color:var(--ink-s);text-decoration:none;margin-bottom:.5rem;cursor:pointer;transition:color .15s}
+.footer-col a:hover{color:var(--ink)}
+.footer-bot{border-top:1px solid var(--border);padding-top:1.25rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
+.footer-bot p{font-size:.7rem;color:var(--ink-t)}
+
+/* ADMIN LOGIN */
+.admin-login-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:2.5rem;max-width:380px;width:100%;box-shadow:var(--sh-lg)}
+.admin-login-ico{width:52px;height:52px;background:var(--crim-p);border:1px solid rgba(196,56,78,0.2);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;color:var(--crim);font-size:1.4rem}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;padding:2.5rem 1.5rem}
+  .steps{grid-template-columns:1fr 1fr}.steps::after{display:none}
+  .kpi-row{grid-template-columns:1fr 1fr}
+  .dash-grid{grid-template-columns:1fr}
+  .res-grid{grid-template-columns:1fr 1fr}
+  .form-row{grid-template-columns:1fr}
+  .section{padding:3rem 1.5rem}
+  nav{padding:0 1.25rem}
+  .nav-links{display:none}
+  .admin-wrap{grid-template-columns:1fr}
+  .admin-sidebar{display:none}
+  .footer-g{grid-template-columns:1fr 1fr}
+}
+
+.error-state{text-align:center;padding:3rem;color:var(--ink-s);font-size:.82rem}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo" onclick="show('home')">
+    <div class="nav-logo-mark">
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="7" cy="4.5" r="2.5" stroke="white" stroke-width="1.2"/>
+        <path d="M7 7.5 L7 14" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M4 9.5 L10 9.5" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M7 14 L5 18 M7 14 L9 18" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+        <rect x="12" y="11" width="2" height="7" rx="1" fill="rgba(255,255,255,0.4)"/>
+        <rect x="15" y="8" width="2" height="10" rx="1" fill="rgba(255,255,255,0.65)"/>
+        <rect x="18" y="5" width="2" height="13" rx="1" fill="rgba(255,255,255,0.9)"/>
+      </svg>
+    </div>
+    DowryDebt Watch
+  </div>
+  <div class="nav-links">
+    <a onclick="show('home')" id="nav-home">Home</a>
+    <a onclick="show('problem')" id="nav-problem">The Problem</a>
+    <a onclick="show('report')" id="nav-report">Submit Report</a>
+    <a onclick="show('dashboard')" id="nav-dashboard">Dashboard</a>
+    <a onclick="show('resources')" id="nav-resources">Resources</a>
+    <a onclick="show('admin')" id="nav-admin">Admin</a>
+  </div>
+  <button class="nav-cta" onclick="show('report')">Report Anonymously</button>
+</nav>
+
+<!-- ████ HOME ████ -->
+<div id="page-home" class="page active">
+  <section class="hero">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-content">
+      <div class="badge">India's First Evidence Repository</div>
+      <h1>Koi toh dekh raha hai</h1>
+      <p>Anonymous reporting. District-level data. Evidence that demands reform.</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="show('report')"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M9 1H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V6L9 1z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M9 1v5h5" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M8 10v3M6.5 11.5h3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg> Submit a Report</button>
+        <button class="btn-ghost" onclick="show('dashboard')">View Live Dashboard →</button>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="stat-grid" id="hero-stats">
+        <div class="stat-card c1"><div class="stat-num loading-kpi" style="height:32px;width:80%"></div><div class="stat-lbl">Total anonymous submissions</div></div>
+        <div class="stat-card c2"><div class="stat-num loading-kpi" style="height:32px;width:60%"></div><div class="stat-lbl">Districts covered across India</div></div>
+        <div class="stat-card c3"><div class="stat-num loading-kpi" style="height:32px;width:70%"></div><div class="stat-lbl">Average debt burden per family</div></div>
+        <div class="stat-card c4"><div class="stat-num loading-kpi" style="height:32px;width:55%"></div><div class="stat-lbl">Report ongoing financial coercion</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-alt">
+    <div class="sec-head">
+      <span class="tag">How It Works</span>
+      <h2>From silent suffering to structured data</h2>
+      <p>A safe, four-step process that protects your identity while building evidence for change.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-ico"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="4" y="8" width="10" height="7" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M6 8V6a3 3 0 0 1 6 0v2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="9" cy="12" r="1" fill="currentColor"/></svg></div><h3>Submit Anonymously</h3><p>No name, phone, or email required. Zero-identity form collects only what matters for research.</p></div>
+      <div class="step"><div class="step-ico"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2L14 4.5V9c0 3-2 5-5 6C6 14 4 12 4 9V4.5L9 2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M6.5 9l2 2 3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Privacy Protected</h3><p>Encrypted end-to-end. Location stored at district level only — never your street or address.</p></div>
+      <div class="step"><div class="step-ico"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="5" y="5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.4"/><rect x="7" y="7" width="4" height="4" rx=".5" stroke="currentColor" stroke-width="1.2"/><path d="M7 5V3M11 5V3M7 15v-2M11 15v-2M5 7H3M5 11H3M15 7h-2M15 11h-2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div><h3>AI Fraud Detection</h3><p>Intelligent analysis flags duplicate or implausible submissions to keep the dataset clean.</p></div>
+      <div class="step"><div class="step-ico"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 14h12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><rect x="4" y="9" width="2.5" height="5" rx=".5" fill="currentColor" opacity=".7"/><rect x="7.75" y="6" width="2.5" height="8" rx=".5" fill="currentColor"/><rect x="11.5" y="4" width="2.5" height="10" rx=".5" fill="currentColor" opacity=".5"/></svg></div><h3>Becomes Evidence</h3><p>Aggregated into district-level insights, shared with NGOs, courts, and policymakers.</p></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="sec-head">
+      <span class="tag">Built For</span>
+      <h2>Evidence for everyone who needs it</h2>
+    </div>
+    <div class="res-grid">
+      <div class="res-card"><div class="res-ico" style="background:#FEF3C7"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 3v11M6 14h6" stroke="#C8902A" stroke-width="1.4" stroke-linecap="round"/><path d="M9 4L4.5 6M9 4l4.5 2" stroke="#C8902A" stroke-width="1.3" stroke-linecap="round"/><path d="M3 6l1.5 4h3L6 6" stroke="#C8902A" stroke-width="1.2" stroke-linejoin="round" fill="none"/><path d="M10.5 6l1.5 4h3l-1.5-4" stroke="#C8902A" stroke-width="1.2" stroke-linejoin="round" fill="none"/></svg></div><h3>Legal Institutions & Courts</h3><p>District-level data on financial coercion patterns to support Dowry Prohibition Act cases.</p><a class="res-link" onclick="show('resources')">Legal Resources →</a></div>
+      <div class="res-card"><div class="res-ico" style="background:var(--crim-p)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 7l7-4 7 4" stroke="#9B2335" stroke-width="1.3" stroke-linejoin="round"/><rect x="2" y="7" width="14" height="1.5" rx=".5" fill="#9B2335" opacity=".4"/><path d="M4 9v4M7.5 9v4M10.5 9v4M14 9v4" stroke="#9B2335" stroke-width="1.4" stroke-linecap="round"/><path d="M2 13.5h14" stroke="#9B2335" stroke-width="1.4" stroke-linecap="round"/></svg></div><h3>Policymakers & Government</h3><p>Evidence-based reports for targeted interventions and anti-dowry enforcement priorities.</p><a class="res-link" onclick="show('resources')">Policy Briefs →</a></div>
+      <div class="res-card"><div class="res-ico" style="background:var(--sage-l)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="7" cy="6" r="2.5" stroke="#2D6A4F" stroke-width="1.3"/><path d="M2 15c0-3 2-4.5 5-4.5s5 1.5 5 4.5" stroke="#2D6A4F" stroke-width="1.3" stroke-linecap="round"/><circle cx="13" cy="6.5" r="2" stroke="#2D6A4F" stroke-width="1.2"/><path d="M13.5 11c1.5.3 3 1.2 3 4" stroke="#2D6A4F" stroke-width="1.2" stroke-linecap="round"/></svg></div><h3>NGOs & Social Workers</h3><p>Real-time district maps to identify high-risk areas and direct outreach programs.</p><a class="res-link" onclick="show('resources')">NGO Toolkit →</a></div>
+      <div class="res-card"><div class="res-ico" style="background:var(--blue-l)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M7 3l2 4-2 1-2-4 2-1z" stroke="#1B4F8A" stroke-width="1.3" stroke-linejoin="round"/><path d="M9 7l1.5 3" stroke="#1B4F8A" stroke-width="1.3" stroke-linecap="round"/><circle cx="11" cy="11" r="3" stroke="#1B4F8A" stroke-width="1.3"/><path d="M3 15h5M7 15l-.5-4" stroke="#1B4F8A" stroke-width="1.3" stroke-linecap="round"/></svg></div><h3>Researchers & Academics</h3><p>Clean structured datasets with geographic and financial variables for peer-reviewed research.</p><a class="res-link" onclick="show('resources')">Data Access →</a></div>
+      <div class="res-card"><div class="res-ico" style="background:#F3E8FF"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 14s-5.5-3.5-5.5-7a3.5 3.5 0 0 1 5.5-3A3.5 3.5 0 0 1 14.5 7c0 3.5-5.5 7-5.5 7z" stroke="#7C3AED" stroke-width="1.3" stroke-linejoin="round"/></svg></div><h3>Women & Families</h3><p>A safe outlet to document your experience knowing it builds a bigger picture for change.</p><a class="res-link" onclick="show('report')">Report Now →</a></div>
+      <div class="res-card"><div class="res-ico" style="background:#FEE2E2"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="3" y="3" width="12" height="12" rx="2" stroke="#DC2626" stroke-width="1.3"/><path d="M6 7h6M6 10h4M6 13h3" stroke="#DC2626" stroke-width="1.2" stroke-linecap="round"/></svg></div><h3>Media & Journalists</h3><p>Verified, citable data on dowry financial abuse trends for investigative reporting.</p><a class="res-link" onclick="show('resources')">Press Kit →</a></div>
+    </div>
+  </section>
+</div>
+
+<!-- ████ REPORT FORM ████ -->
+<div id="page-report" class="page">
+  <section class="section">
+    <div class="sec-head">
+      <span class="tag">Submit a Report</span>
+      <h2>Your experience matters. Your identity doesn't.</h2>
+      <p>No identifying information collected. All data encrypted and stored only at district level.</p>
+    </div>
+    <div class="form-wrap">
+      <div class="form-card">
+        <div class="form-hdr">
+          <h3>Confidential Report Form</h3>
+          <p>Takes ~5 minutes. You'll receive an anonymous submission token for your records.</p>
+          <div class="trust">
+            <span><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="4" y="8" width="10" height="7" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M6 8V6a3 3 0 0 1 6 0v2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="9" cy="12" r="1" fill="currentColor"/></svg> End-to-end encrypted</span>
+            <span><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8s2-4 6-4 6 4 6 4-2 4-6 4-6-4-6-4z" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M2 2l12 12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg> Zero personal data stored</span>
+            <span><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5L13 3.5V8c0 2.5-1.8 4-5 5C4.8 12 3 10.5 3 8V3.5L8 1.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg> Fraud-detection protected</span>
+          </div>
+        </div>
+        <div class="form-body">
+          <div class="priv-note"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2L14 4.5V9c0 3-2 5-5 6C6 14 4 12 4 9V4.5L9 2z" stroke="#2D6A4F" stroke-width="1.4" stroke-linejoin="round"/><path d="M6.5 9l2 2 3-3" stroke="#2D6A4F" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/ style="font-size:1.1rem"></svg> <span><strong>Your privacy is absolute.</strong> We store only district and state never your village, street, or any identifier. This data will only ever appear in aggregated, anonymous form in our public reports.</span></div>
+
+          <div class="form-row">
+            <div class="fg">
+              <label>State <span class="req">*</span></label>
+              <select id="f-state">
+                <option value="">Select State</option>
+                <option>Uttar Pradesh</option><option>Bihar</option><option>Rajasthan</option>
+                <option>Madhya Pradesh</option><option>Maharashtra</option><option>Gujarat</option>
+                <option>Haryana</option><option>Punjab</option><option>West Bengal</option>
+                <option>Andhra Pradesh</option><option>Telangana</option><option>Karnataka</option>
+                <option>Tamil Nadu</option><option>Odisha</option><option>Jharkhand</option>
+                <option>Chhattisgarh</option><option>Himachal Pradesh</option><option>Other</option>
+              </select>
+            </div>
+            <div class="fg">
+              <label>District <span class="req">*</span></label>
+              <input type="text" id="f-district" placeholder="e.g. Patna, Lucknow, Jaipur">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="fg">
+              <label>Year of Marriage</label>
+              <select id="f-year">
+                <option value="">Select Year</option>
+                <option>2024</option><option>2023</option><option>2022</option><option>2021</option>
+                <option>2020</option><option>2019</option><option>2018</option><option>2017</option>
+                <option>2016</option><option>2015</option><option>Before 2015</option>
+              </select>
+            </div>
+            <div class="fg">
+              <label>Your Relation to the Incident</label>
+              <select id="f-relation">
+                <option value="">Select</option>
+                <option>Affected woman (self)</option>
+                <option>Parent of affected woman</option>
+                <option>Sibling of affected woman</option>
+                <option>Extended family</option>
+                <option>Community member / Witness</option>
+                <option>Social worker / NGO</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="fg">
+            <label>Types of Financial Pressure <span class="req">*</span></label>
+            <div class="chk-group" id="pressure-types">
+              <label class="chk"><input type="checkbox" value="Cash demands before marriage"><span>Cash demands before marriage</span></label>
+              <label class="chk"><input type="checkbox" value="Jewellery / gold demands"><span>Jewellery / gold demands</span></label>
+              <label class="chk"><input type="checkbox" value="Vehicle / property demands"><span>Vehicle / property demands</span></label>
+              <label class="chk"><input type="checkbox" value="Post-marriage cash demands"><span>Post-marriage cash demands</span></label>
+              <label class="chk"><input type="checkbox" value="Loans taken by bride's family"><span>Loans taken by bride's family</span></label>
+              <label class="chk"><input type="checkbox" value="Land / asset sold"><span>Land / asset sold</span></label>
+              <label class="chk"><input type="checkbox" value="Threats if demands not met"><span>Threats if demands not met</span></label>
+              <label class="chk"><input type="checkbox" value="Ongoing post-marriage pressure"><span>Ongoing post-marriage pressure</span></label>
+            </div>
+          </div>
+
+          <div class="fg">
+            <label>Estimated Total Financial Burden on Bride's Family</label>
+            <select id="f-burden">
+              <option value="">Prefer not to say</option>
+              <option>Under ₹1 lakh</option><option>₹1–5 lakh</option>
+              <option>₹5–10 lakh</option><option>₹10–25 lakh</option>
+              <option>₹25–50 lakh</option><option>Over ₹50 lakh</option>
+            </select>
+          </div>
+
+          <div class="fg">
+            <label>Approximate Debt Amount (drag to set)</label>
+            <div class="range-row">
+              <span style="font-size:.75rem;color:var(--ink-s)">₹0</span>
+              <input type="range" id="debt-slider" min="0" max="5000000" step="50000" value="0" oninput="updateDebt(this.value)">
+              <span style="font-size:.75rem;color:var(--ink-s)">₹50L+</span>
+              <span class="range-val" id="debt-val">₹0</span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="fg">
+              <label>Is financial pressure still ongoing?</label>
+              <select id="f-ongoing">
+                <option value="">Select</option>
+                <option>Yes — demands continue after marriage</option>
+                <option>No — resolved after marriage</option>
+                <option>No — but family still repaying loans</option>
+                <option>Don't know</option>
+              </select>
+            </div>
+            <div class="fg">
+              <label>Was any formal complaint filed?</label>
+              <select id="f-complaint">
+                <option value="">Select</option>
+                <option>Yes — police / FIR</option>
+                <option>Yes — women's commission</option>
+                <option>Yes — NGO / helpline</option>
+                <option>No — feared retaliation</option>
+                <option>No — social pressure</option>
+                <option>No — didn't know process</option>
+                <option>Attempted but discouraged</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="fg">
+            <label>Additional Details <em style="font-weight:400;color:var(--ink-s)">(optional — do NOT include names or addresses)</em></label>
+            <textarea id="f-details" placeholder="Describe what happened in your own words. Do not include names, phone numbers, or locations more specific than district level."></textarea>
+          </div>
+
+          <button class="submit-btn" id="submit-btn" onclick="submitReport()">
+            <span id="submit-text">Submit Anonymous Report</span>
+            <span>→</span>
+          </button>
+          <p id="submit-error" style="color:var(--crim);font-size:.8rem;margin-top:.5rem;display:none"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ████ DASHBOARD ████ -->
+<div id="page-dashboard" class="page">
+  <section class="section">
+    <div class="sec-head">
+      <span class="tag">Live Data Dashboard</span>
+      <h2>District-level evidence, made visible</h2>
+      <p>Real data from anonymous submissions. Updated in real time. No individual can ever be identified.</p>
+    </div>
+
+    <div class="dash-filters" id="state-filters">
+      <span class="ftag on" onclick="filterDash(this,'all')">All India</span>
+    </div>
+
+    <div class="kpi-row" id="kpi-row">
+      <div class="kpi"><div class="kpi-lbl">Total Reports</div><div class="kpi-val loading-kpi" style="height:28px;width:80px"></div><div class="kpi-sub">submissions</div></div>
+      <div class="kpi"><div class="kpi-lbl">Districts Covered</div><div class="kpi-val loading-kpi" style="height:28px;width:60px"></div><div class="kpi-sub">across India</div></div>
+      <div class="kpi"><div class="kpi-lbl">Average Debt</div><div class="kpi-val loading-kpi" style="height:28px;width:80px"></div><div class="kpi-sub">per family</div></div>
+      <div class="kpi"><div class="kpi-lbl">Ongoing Coercion</div><div class="kpi-val loading-kpi" style="height:28px;width:60px"></div><div class="kpi-sub">report post-marriage demands</div></div>
+    </div>
+
+    <div class="dash-grid">
+      <div class="panel">
+        <div class="panel-title"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 3l4-1 4 2 4-2v9l-4 2-4-2-4 1V3z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M5 2v9M9 4v9" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity=".5"/></svg> District Risk Map — Submission Intensity</div>
+        <div id="india-map">
+          <div class="map-tooltip" id="map-tip"></div>
+          <div class="map-legend">
+            <div>Report Density</div>
+            <div class="map-legend-bar"><div class="map-legend-grad"></div></div>
+            <div style="display:flex;justify-content:space-between;font-size:.65rem;margin-top:2px"><span>Low</span><span>High</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 14h12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><rect x="4" y="9" width="2.5" height="5" rx=".5" fill="currentColor" opacity=".7"/><rect x="7.75" y="6" width="2.5" height="8" rx=".5" fill="currentColor"/><rect x="11.5" y="4" width="2.5" height="10" rx=".5" fill="currentColor" opacity=".5"/></svg> Reports by State</div>
+        <div id="chart-states" style="height:300px"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 10l3-4 2.5 2L11 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 3h2v2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg> Monthly Submission Trend</div>
+        <div id="chart-trend" style="height:220px"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 3.5h7M3.5 6.5h7M6.5 6.5c2 0 3.5.8 3.5 2.5S8.5 12 6.5 12L3.5 12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M3.5 3.5v9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg> Debt Burden Distribution</div>
+        <div id="chart-debt" style="height:220px"></div>
+      </div>
+      <div class="panel full">
+        <div class="panel-title"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="3" cy="10" r="1.2" fill="currentColor"/><circle cx="6" cy="6" r="1.2" fill="currentColor"/><circle cx="9" cy="8" r="1.2" fill="currentColor"/><circle cx="12" cy="4" r="1.2" fill="currentColor"/><path d="M3 10l3-4 3 2 3-4" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity=".4"/></svg> Type of Financial Pressure — All India</div>
+        <div id="chart-pressure" style="height:200px"></div>
+      </div>
+      <div class="panel full">
+        <div class="panel-title"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4 2h6v5a3 3 0 0 1-6 0V2z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M2 3H4M10 3h2M7 9v2M5 13h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg> Top Districts by Report Volume</div>
+        <div id="district-table" style="overflow-x:auto"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ████ RESOURCES ████ -->
+<div id="page-resources" class="page">
+  <section class="section">
+    <div class="sec-head">
+      <span class="tag">Resources</span>
+      <h2>Help, rights, and research tools</h2>
+    </div>
+    <div class="tab-bar">
+      <button class="tab on" onclick="rtab('help',this)">If You Need Help</button>
+      <button class="tab" onclick="rtab('legal',this)">Know Your Rights</button>
+      <button class="tab" onclick="rtab('research',this)">For Researchers & NGOs</button>
+    </div>
+    <div id="res-help">
+      <div class="res-grid">
+        <div class="res-card"><div class="res-ico" style="background:#FEE2E2"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M5.5 3h2l1 3-1.5 1.5c.8 1.5 2 2.7 3.5 3.5L12 9.5l3 1v2a2 2 0 0 1-2 2A13 13 0 0 1 3 5a2 2 0 0 1 2-2z" stroke="#DC2626" stroke-width="1.3" stroke-linejoin="round"/></svg></div><h3>National Women's Helpline</h3><p>24×7 toll-free support for women in distress. Connects to local shelters and legal aid.</p><a class="res-link" href="tel:181">Call 181</a></div>
+        <div class="res-card"><div class="res-ico" style="background:var(--sage-l)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="7" cy="6" r="2.5" stroke="#2D6A4F" stroke-width="1.3"/><path d="M2 15c0-3 2-4.5 5-4.5s5 1.5 5 4.5" stroke="#2D6A4F" stroke-width="1.3" stroke-linecap="round"/><circle cx="13" cy="6.5" r="2" stroke="#2D6A4F" stroke-width="1.2"/><path d="M13.5 11c1.5.3 3 1.2 3 4" stroke="#2D6A4F" stroke-width="1.2" stroke-linecap="round"/></svg></div><h3>iCall Psychosocial Helpline</h3><p>Free, confidential mental health support from TISS. Mon–Sat.</p><a class="res-link" href="tel:9152987821">9152987821</a></div>
+        <div class="res-card"><div class="res-ico" style="background:var(--blue-l)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 3v11M6 14h6" stroke="#1B4F8A" stroke-width="1.4" stroke-linecap="round"/><path d="M9 4L4.5 6M9 4l4.5 2" stroke="#1B4F8A" stroke-width="1.3" stroke-linecap="round"/><path d="M3 6l1.5 4h3L6 6" stroke="#1B4F8A" stroke-width="1.2" stroke-linejoin="round" fill="none"/><path d="M10.5 6l1.5 4h3l-1.5-4" stroke="#1B4F8A" stroke-width="1.2" stroke-linejoin="round" fill="none"/></svg></div><h3>National Legal Services Authority</h3><p>Free legal aid for women filing complaints under Dowry Prohibition Act or PWDVA.</p><a class="res-link" href="https://nalsa.gov.in" target="_blank">Visit NALSA →</a></div>
+        <div class="res-card"><div class="res-ico" style="background:var(--gold-l)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 8l6-5 6 5" stroke="#C8902A" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 7v7h8V7" stroke="#C8902A" stroke-width="1.3" stroke-linejoin="round"/><path d="M9 13c0 0-2.5-1.5-2.5-3a1.5 1.5 0 0 1 2.5-1 1.5 1.5 0 0 1 2.5 1C11.5 11.5 9 13 9 13z" stroke="#C8902A" stroke-width="1.1" stroke-linejoin="round"/></svg></div><h3>One Stop Centres (Sakhi)</h3><p>Government centres providing medical, legal, police, shelter and counselling support.</p><a class="res-link" href="https://wcd.nic.in" target="_blank">Find Nearest →</a></div>
+        <div class="res-card"><div class="res-ico" style="background:#F3E8FF"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="3" width="14" height="10" rx="2" stroke="#7C3AED" stroke-width="1.3"/><path d="M9 6v3M9 10.5v.5" stroke="#7C3AED" stroke-width="1.3" stroke-linecap="round"/><path d="M6 15l3-2 3 2" stroke="#7C3AED" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>NCW Complaint Portal</h3><p>File a complaint online with the National Commission for Women. Available 24×7.</p><a class="res-link" href="https://ncw.nic.in" target="_blank">File Complaint →</a></div>
+        <div class="res-card"><div class="res-ico" style="background:var(--crim-p)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="4" y="4" width="10" height="12" rx="1.5" stroke="#9B2335" stroke-width="1.3"/><path d="M7 4V3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1" stroke="#9B2335" stroke-width="1.2"/><path d="M6 9h6M6 12h4" stroke="#9B2335" stroke-width="1.2" stroke-linecap="round"/></svg></div><h3>Document Your Case</h3><p>Step-by-step guide to documenting financial demands for use as legal evidence.</p><a class="res-link" href="#">Download Guide →</a></div>
+      </div>
+    </div>
+    <div id="res-legal" style="display:none">
+      <div class="res-grid">
+        <div class="res-card"><div class="res-ico" style="background:#FEE2E2"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="3" width="14" height="10" rx="1.5" stroke="#DC2626" stroke-width="1.3"/><path d="M5 7h8M5 10h5" stroke="#DC2626" stroke-width="1.2" stroke-linecap="round"/><circle cx="13" cy="14" r="2" stroke="#DC2626" stroke-width="1.2"/><path d="M11.5 15.5L11 17l2-1 2 1-.5-1.5" stroke="#DC2626" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Dowry Prohibition Act, 1961</h3><p>Giving or taking dowry is punishable with min. 5 years imprisonment and ₹15,000 fine or the value of dowry — whichever is higher.</p><a class="res-link" href="#">Read Full Act →</a></div>
+        <div class="res-card"><div class="res-ico" style="background:var(--blue-l)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 3v11M6 14h6" stroke="#1B4F8A" stroke-width="1.4" stroke-linecap="round"/><path d="M9 4L4.5 6M9 4l4.5 2" stroke="#1B4F8A" stroke-width="1.3" stroke-linecap="round"/><path d="M3 6l1.5 4h3L6 6" stroke="#1B4F8A" stroke-width="1.2" stroke-linejoin="round" fill="none"/><path d="M10.5 6l1.5 4h3l-1.5-4" stroke="#1B4F8A" stroke-width="1.2" stroke-linejoin="round" fill="none"/></svg></div><h3>Section 498A IPC</h3><p>Cruelty including economic cruelty and dowry harassment is a cognizable, non-bailable offence with 3 years imprisonment.</p><a class="res-link" href="#">498A Explained →</a></div>
+        <div class="res-card"><div class="res-ico" style="background:rgba(61,153,112,0.1)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2L14 4.5V9c0 3-2 5-5 6C6 14 4 12 4 9V4.5L9 2z" stroke="#3D9970" stroke-width="1.4" stroke-linejoin="round"/><path d="M6.5 9l2 2 3-3" stroke="#3D9970" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>PWDVA 2005</h3><p>Economic abuse — withholding assets, controlling income — is legally recognised as domestic violence.</p><a class="res-link" href="#">PWDVA Guide →</a></div>
+        <div class="res-card"><div class="res-ico" style="background:var(--gold-l)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M10 4l4 4-7 7-4-4 7-7z" stroke="#C8902A" stroke-width="1.3" stroke-linejoin="round"/><path d="M4 14l1.5 1.5" stroke="#C8902A" stroke-width="1.3" stroke-linecap="round"/></svg></div><h3>Stridhan Rights</h3><p>Everything given to a woman at marriage is legally her absolute property. Refusal to return stridhan is a criminal offence.</p><a class="res-link" href="#">Assert Rights →</a></div>
+        <div class="res-card"><div class="res-ico" style="background:rgba(74,143,212,0.1)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M10 2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7l-5-5z" stroke="#4A8FD4" stroke-width="1.3" stroke-linejoin="round"/><path d="M10 2v5h5" stroke="#4A8FD4" stroke-width="1.3" stroke-linejoin="round"/><path d="M6 10h6M6 13h4" stroke="#4A8FD4" stroke-width="1.2" stroke-linecap="round"/></svg></div><h3>Filing an FIR</h3><p>Practical guide on what to bring, how to handle police reluctance, and what to do if your FIR is refused.</p><a class="res-link" href="#">FIR Guide →</a></div>
+        <div class="res-card"><div class="res-ico" style="background:rgba(196,56,78,0.08)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 6a2 2 0 0 1 2-2h3l2 2h5a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6z" stroke="#C4384E" stroke-width="1.3" stroke-linejoin="round"/></svg></div><h3>NCW Online Complaint</h3><p>File a complaint online with the National Commission for Women — available nationwide, 24×7.</p><a class="res-link" href="https://ncw.nic.in" target="_blank">File Now →</a></div>
+      </div>
+    </div>
+    <div id="res-research" style="display:none">
+      <div class="res-grid">
+        <div class="res-card"><div class="res-ico" style="background:var(--blue-l)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M7 3l2 4-2 1-2-4 2-1z" stroke="#1B4F8A" stroke-width="1.3" stroke-linejoin="round"/><path d="M9 7l1.5 3" stroke="#1B4F8A" stroke-width="1.3" stroke-linecap="round"/><circle cx="11" cy="11" r="3" stroke="#1B4F8A" stroke-width="1.3"/><path d="M3 15h5M7 15l-.5-4" stroke="#1B4F8A" stroke-width="1.3" stroke-linecap="round"/></svg></div><h3>Research Data Access</h3><p>Verified researchers can apply for access to aggregated district-level datasets. Requires institutional affiliation.</p><a class="res-link" href="#">Apply for Access →</a></div>
+        <div class="res-card"><div class="res-ico" style="background:var(--sage-l)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><ellipse cx="9" cy="5" rx="6" ry="2.5" stroke="#2D6A4F" stroke-width="1.3"/><path d="M3 5v4c0 1.4 2.7 2.5 6 2.5S15 10.4 15 9V5" stroke="#2D6A4F" stroke-width="1.3"/><path d="M3 9v4c0 1.4 2.7 2.5 6 2.5S15 14.4 15 13V9" stroke="#2D6A4F" stroke-width="1.3"/></svg></div><h3>Data Dictionary & Methodology</h3><p>Full documentation of variables, fraud-detection logic, aggregation rules, and data quality standards.</p><a class="res-link" href="#">Download Docs →</a></div>
+        <div class="res-card"><div class="res-ico" style="background:var(--gold-l)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2a5 5 0 0 1 5 5c0 4-5 9-5 9S4 11 4 7a5 5 0 0 1 5-5z" stroke="#C8902A" stroke-width="1.4"/><circle cx="9" cy="7" r="1.8" stroke="#C8902A" stroke-width="1.3"/></svg></div><h3>District Risk Index</h3><p>Composite index combining submission volume, debt amounts, coercion rates for NGO targeting and policy use.</p><a class="res-link" href="#">Download Index →</a></div>
+        <div class="res-card"><div class="res-ico" style="background:rgba(196,56,78,0.1)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M10 2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7l-5-5z" stroke="#C4384E" stroke-width="1.3" stroke-linejoin="round"/><path d="M10 2v5h5" stroke="#C4384E" stroke-width="1.3" stroke-linejoin="round"/><path d="M6 13v-2M9 13V9M12 13v-3" stroke="#C4384E" stroke-width="1.3" stroke-linecap="round"/></svg></div><h3>Policy Brief Series</h3><p>Evidence-based briefs for Ministry of WCD, NITI Aayog, and state governments.</p><a class="res-link" href="#">Read Briefs →</a></div>
+        <div class="res-card"><div class="res-ico" style="background:rgba(74,143,212,0.1)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 8l4 4 2-1 3 3 5-5" stroke="#4A8FD4" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 5L8 7l2 2" stroke="#4A8FD4" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 4l2 2-5 5" stroke="#4A8FD4" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>NGO Partnership Program</h3><p>Become a data collection partner. NGOs can embed our reporting tools in field outreach.</p><a class="res-link" href="#">Partner With Us →</a></div>
+        <div class="res-card"><div class="res-ico" style="background:rgba(196,56,78,0.08)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="3" y="3" width="12" height="12" rx="2" stroke="#C4384E" stroke-width="1.3"/><path d="M6 7h6M6 10h4M6 13h3" stroke="#C4384E" stroke-width="1.2" stroke-linecap="round"/></svg></div><h3>Press & Media Kit</h3><p>Verified statistics, infographics, and expert contacts for journalists covering dowry and women's rights.</p><a class="res-link" href="#">Press Kit →</a></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ████ PROBLEM ████ -->
+<div id="page-problem" class="page">
+  <section class="section">
+    <div class="sec-head">
+      <span class="tag">The Problem</span>
+      <h2>What the law doesn't capture</h2>
+      <p>Dowry deaths make headlines. The slow financial stranglehold that precedes them does not.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:4rem;align-items:start">
+      <ul class="problem-list">
+        <li>
+          <div class="problem-ico"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 3.5h7M3.5 6.5h7M6.5 6.5c2 0 3.5.8 3.5 2.5S8.5 12 6.5 12L3.5 12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M3.5 3.5v9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+          <div><strong style="display:block;font-size:.875rem;color:var(--ink);margin-bottom:.3rem">Household Debt from Dowry Demands</strong><span style="font-size:.78rem;color:var(--ink-s);line-height:1.7">Families take loans, sell land, mortgage homes — debts that follow them for decades. Never recorded as "dowry-related" in any official dataset.</span></div>
+        </li>
+        <li>
+          <div class="problem-ico"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 8l6-5 6 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 7.5V14h3M10 14h3V7.5" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M3 3l12 12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+          <div><strong style="display:block;font-size:.875rem;color:var(--ink);margin-bottom:.3rem">Asset Liquidation for Marriage</strong><span style="font-size:.78rem;color:var(--ink-s);line-height:1.7">Jewellery, livestock, agricultural land — assets built over generations are liquidated. The financial shock destabilises entire households.</span></div>
+        </li>
+        <li>
+          <div class="problem-ico"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M7 11l4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M9.5 7.5l1.5-1.5a3 3 0 1 1 4.2 4.2L13.5 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M8.5 10.5L7 12a3 3 0 1 1-4.2-4.2L4.5 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+          <div><strong style="display:block;font-size:.875rem;color:var(--ink);margin-bottom:.3rem">Long-term Financial Coercion</strong><span style="font-size:.78rem;color:var(--ink-s);line-height:1.7">After marriage, demands continue. Women are forced to remain in unsafe situations because their family cannot afford the cost of separation.</span></div>
+        </li>
+        <li>
+          <svg width="22" height="22" viewBox="0 0 18 18" fill="none"><path d="M1 3l5-1 5 2 5-2v12l-5 2-5-2-5 1V3z" stroke="#9B2335" stroke-width="1.3" stroke-linejoin="round"/><path d="M6 2v12M11 4v12" stroke="#9B2335" stroke-width="1" stroke-linecap="round" opacity=".5"/></svg>
+          <div><strong style="display:block;font-size:.875rem;color:var(--ink);margin-bottom:.3rem">No District-level Data Exists</strong><span style="font-size:.78rem;color:var(--ink-s);line-height:1.7">NCRB records dowry deaths and complaints. There is no database that maps dowry-induced financial distress at a geographic level that policy can act on.</span></div>
+        </li>
+        <li>
+          <div class="problem-ico"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M5 7H3v4h2l4 3V4L5 7z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M3 3l12 12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+          <div><strong style="display:block;font-size:.875rem;color:var(--ink);margin-bottom:.3rem">Shame and Silence</strong><span style="font-size:.78rem;color:var(--ink-s);line-height:1.7">Social stigma prevents reporting. Families believe taking loans for a daughter's wedding is normal. The abuse hides inside accepted cultural practice.</span></div>
+        </li>
+      </ul>
+      <div style="background:var(--surface);border:1px solid rgba(196,56,78,0.2);border-radius:var(--r-xl);padding:2.25rem;position:sticky;top:88px">
+        <h3 style="font-family:var(--fd);font-size:1.35rem;font-weight:700;margin-bottom:1.25rem;color:var(--crim)">Projected Impact</h3>
+        <div style="padding:.85rem 0;border-bottom:1px solid var(--border)">
+          <div style="font-family:var(--fd);font-size:1.75rem;font-weight:700;color:var(--ink)">India's First</div>
+          <div style="font-size:.78rem;color:var(--ink-s);margin-top:.2rem">Large-scale repository on dowry-linked financial abuse</div>
+        </div>
+        <div style="padding:.85rem 0;border-bottom:1px solid var(--border)">
+          <div style="font-family:var(--fd);font-size:1.75rem;font-weight:700;color:var(--ink)">735 Districts</div>
+          <div style="font-size:.78rem;color:var(--ink-s);margin-top:.2rem">Target coverage — every district in India mapped</div>
+        </div>
+        <div style="padding:.85rem 0;border-bottom:1px solid var(--border)">
+          <div style="font-family:var(--fd);font-size:1.75rem;font-weight:700;color:var(--ink)">Zero Identity</div>
+          <div style="font-size:.78rem;color:var(--ink-s);margin-top:.2rem">No reportee can ever be identified from published data</div>
+        </div>
+        <div style="padding:.85rem 0;">
+          <div style="font-family:var(--fd);font-size:1.75rem;font-weight:700;color:var(--ink)">Open Data</div>
+          <div style="font-size:.78rem;color:var(--ink-s);margin-top:.2rem">Aggregated datasets free for researchers, NGOs, journalists</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ████ ADMIN ████ -->
+<div id="page-admin" class="page">
+  <div id="admin-login" style="display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 64px)">
+    <div class="admin-login-card">
+      <div style="text-align:center;margin-bottom:2rem">
+        <div class="admin-login-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="11" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="16.5" r="1.5" fill="currentColor"/></svg></div>
+        <h2 style="font-family:var(--fd);font-size:1.4rem;font-weight:700;color:var(--ink)">Admin Access</h2>
+        <p style="font-size:.82rem;color:var(--ink-s);margin-top:.4rem">DowryDebt Watch - Secure Panel</p>
+      </div>
+      <div class="fg"><label>Username</label><input type="text" id="admin-user" value="admin"></div>
+      <div class="fg"><label>Password</label><input type="password" id="admin-pass" value="dowrywatch2024"></div>
+      <button class="submit-btn" onclick="adminLogin()" style="margin-top:.5rem">Login to Admin Panel</button>
+      <p id="login-err" style="color:var(--crim);font-size:.78rem;text-align:center;margin-top:.75rem;display:none">Invalid credentials</p>
+    </div>
+  </div>
+
+  <div id="admin-panel" style="display:none">
+    <div class="admin-wrap">
+      <div class="admin-sidebar">
+        <div class="logo">DowryDebt Watch<span>Admin Panel</span></div>
+        <nav class="sidebar-nav">
+          <a class="active" onclick="adminPane('overview',this)"><span class="ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/></svg></span>Overview</a>
+          <a onclick="adminPane('reports',this)"><span class="ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M9 1H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V6L9 1z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M9 1v5h5" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M5 10h6M5 12h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>All Reports</a>
+          <a onclick="adminPane('fraud',this)"><span class="ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L1.5 13.5h13L8 2z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M8 6.5v3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="11" r=".7" fill="currentColor"/></svg></span>Fraud Queue</a>
+          <a onclick="adminPane('verified',this)"><span class="ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 8l2.5 2.5L11 5.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Verified</a>
+        </nav>
+      </div>
+      <div class="admin-content">
+
+        <!-- Overview -->
+        <div class="admin-pane active" id="pane-overview">
+          <div class="admin-head">
+            <h2>Overview</h2>
+            <button class="btn-primary" style="font-size:.8rem;padding:.5rem 1rem" onclick="adminPane('reports',document.querySelector('.sidebar-nav a:nth-child(2)'))">View All Reports</button>
+          </div>
+          <div class="admin-kpi" id="admin-kpi-row">
+            <div class="kpi"><div class="kpi-lbl">Total Reports</div><div class="kpi-val loading-kpi" id="ak-total" style="height:28px;width:80px"></div></div>
+            <div class="kpi"><div class="kpi-lbl">Pending Review</div><div class="kpi-val loading-kpi" id="ak-pending" style="height:28px;width:60px"></div></div>
+            <div class="kpi"><div class="kpi-lbl">Flagged</div><div class="kpi-val loading-kpi" id="ak-flagged" style="height:28px;width:60px"></div></div>
+            <div class="kpi"><div class="kpi-lbl">Today</div><div class="kpi-val loading-kpi" id="ak-today" style="height:28px;width:60px"></div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+            <div class="panel">
+              <div class="panel-title">Avg Fraud Score</div>
+              <div id="fraud-gauge" style="height:160px"></div>
+            </div>
+            <div class="panel">
+              <div class="panel-title">Status Distribution</div>
+              <div id="admin-status-chart" style="height:160px"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- All Reports -->
+        <div class="admin-pane" id="pane-reports">
+          <div class="admin-head">
+            <h2>All Reports</h2>
+            <div style="display:flex;gap:.5rem">
+              <select id="status-filter" onchange="loadAdminReports()" style="font-size:.8rem;padding:.4rem .75rem;border:1.5px solid var(--border);border-radius:6px;font-family:var(--fb)">
+                <option value="">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="verified">Verified</option>
+                <option value="flagged">Flagged</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div>
+          </div>
+          <div class="panel">
+            <div id="reports-table"></div>
+            <div id="reports-pagination" style="display:flex;gap:.5rem;margin-top:1rem;justify-content:center"></div>
+          </div>
+        </div>
+
+        <!-- Fraud Queue -->
+        <div class="admin-pane" id="pane-fraud">
+          <div class="admin-head"><h2><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L1.5 13.5h13L8 2z" stroke="#C8902A" stroke-width="1.2" stroke-linejoin="round"/><path d="M8 6.5v3" stroke="#C8902A" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="11" r=".7" fill="#C8902A"/></svg> Fraud Queue</h2></div>
+          <p style="font-size:.83rem;color:var(--ink-s);margin-bottom:1rem">Reports with fraud score ≥ 0.45, ordered by risk. Review and mark as verified or rejected.</p>
+          <div class="panel"><div id="fraud-table"></div></div>
+        </div>
+
+        <!-- Verified -->
+        <div class="admin-pane" id="pane-verified">
+          <div class="admin-head"><h2><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="#2D6A4F" stroke-width="1.2"/><path d="M5 8l2.5 2.5L11 5.5" stroke="#2D6A4F" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg> Verified Reports</h2></div>
+          <div class="panel"><div id="verified-table"></div></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-ov" id="modal">
+  <div class="modal">
+    <div class="modal-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="#2D6A4F" stroke-width="1.2"/><path d="M5 8l2.5 2.5L11 5.5" stroke="#2D6A4F" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/ style="font-size:2.5rem"></svg></div>
+    <h3>Report Submitted Safely</h3>
+    <p>Your experience has been securely recorded and will appear only in aggregated, anonymous form in our district-level data. Your identity is fully protected.</p>
+    <div class="modal-token" id="token-display">DDW-XXXX-XXXX-XXXX</div>
+    <p style="font-size:.75rem;color:var(--ink-s);margin-bottom:1.25rem">Save this token. You can use it to verify your submission is counted — or to request deletion at any time.</p>
+    <button class="modal-close" onclick="closeModal()">Done</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+  <div class="footer-g">
+    <div class="footer-brand">
+      <h4>DowryDebt Watch</h4>
+      <p>India's first structured, district-level evidence repository on dowry-linked financial abuse. Transforming invisible suffering into data that drives legal reform and policy change.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Platform</h5>
+      <a onclick="show('home')">Home</a>
+      <a onclick="show('report')">Submit Report</a>
+      <a onclick="show('dashboard')">Dashboard</a>
+      <a onclick="show('resources')">Resources</a>
+    </div>
+    <div class="footer-col">
+      <h5>Legal</h5>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Data Use Policy</a>
+      <a href="#">Anonymity Guarantee</a>
+      <a href="#">Terms of Use</a>
+    </div>
+    <div class="footer-col">
+      <h5>Contact</h5>
+      <a href="#">For NGOs & Researchers</a>
+      <a href="#">For Media</a>
+      <a href="#">For Government</a>
+    </div>
+  </div>
+  <div class="footer-bot">
+    <p>© 2024 DowryDebt Watch. All data published in aggregate only. No individual can be identified.</p>
+    <p>Built for India's 735 Districts</p>
+  </div>
+</footer>
+
+<script>
+const API = 'http://localhost:8000';
+let dashLoaded = false, adminLoaded = false, currentAdminPage = 1;
+
+// ── Navigation ───────────────────────────────────────────────
+function show(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  const el = document.getElementById('nav-' + id);
+  if (el) el.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+  if (id === 'dashboard' && !dashLoaded) { dashLoaded = true; loadDashboard(); }
+}
+
+// ── Toast ────────────────────────────────────────────────────
+function toast(msg, dur = 3000) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+
+// ── Home Stats (from API) ────────────────────────────────────
+async function loadHomeStats() {
+  try {
+    const data = await apiFetch('/api/dashboard/summary');
+    const g = document.getElementById('hero-stats');
+    const vals = [
+      { num: data.total_reports.toLocaleString('en-IN'), lbl: 'Total anonymous submissions' },
+      { num: data.districts_covered.toString(), lbl: 'Districts covered across India' },
+      { num: '₹' + fmtAmount(data.median_debt), lbl: 'Average debt burden per family' },
+      { num: data.ongoing_coercion_pct + '%', lbl: 'Report ongoing financial coercion' },
+    ];
+    const cls = ['c1','c2','c3','c4'];
+    g.innerHTML = vals.map((v, i) => `
+      <div class="stat-card ${cls[i]}">
+        <div class="stat-num">${v.num}</div>
+        <div class="stat-lbl">${v.lbl}</div>
+      </div>`).join('');
+  } catch(e) {
+    console.log('API not available — using demo mode');
+  }
+}
+
+function fmtAmount(n) {
+  if (!n) return '0';
+  if (n >= 10000000) return (n/10000000).toFixed(1) + 'Cr';
+  if (n >= 100000) return (n/100000).toFixed(1) + 'L';
+  if (n >= 1000) return (n/1000).toFixed(0) + 'K';
+  return n.toString();
+}
+
+async function apiFetch(path, opts = {}) {
+  const r = await fetch(API + path, opts);
+  if (!r.ok) throw new Error(r.status);
+  return r.json();
+}
+
+// ── Report Form ───────────────────────────────────────────────
+document.querySelectorAll('.chk').forEach(c => {
+  c.addEventListener('click', () => c.classList.toggle('on'));
+});
+
+function updateDebt(v) {
+  v = parseInt(v);
+  let d = v === 0 ? '₹0' : v >= 5000000 ? '₹50L+' : v >= 100000 ? '₹' + (v/100000).toFixed(1) + 'L' : '₹' + (v/1000).toFixed(0) + 'K';
+  document.getElementById('debt-val').textContent = d;
+}
+
+async function submitReport() {
+  const state = document.getElementById('f-state').value;
+  const district = document.getElementById('f-district').value.trim();
+  const errEl = document.getElementById('submit-error');
+  const btn = document.getElementById('submit-btn');
+
+  errEl.style.display = 'none';
+  if (!state || !district) {
+    errEl.textContent = 'Please fill in State and District — these are required fields.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  const pressure_types = [...document.querySelectorAll('.chk.on input')].map(i => i.value);
+  const debt_amount = parseInt(document.getElementById('debt-slider').value) || 0;
+
+  const payload = {
+    state, district,
+    year_of_marriage: parseInt(document.getElementById('f-year').value) || null,
+    relation_to_incident: document.getElementById('f-relation').value || null,
+    pressure_types,
+    estimated_burden: document.getElementById('f-burden').value || null,
+    debt_amount,
+    ongoing_coercion: document.getElementById('f-ongoing').value || null,
+    complaint_filed: document.getElementById('f-complaint').value || null,
+    additional_details: document.getElementById('f-details').value || null,
+  };
+
+  btn.disabled = true;
+  document.getElementById('submit-text').innerHTML = '<span class="loading"></span> Submitting securely...';
+
+  try {
+    const data = await apiFetch('/api/reports', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    document.getElementById('token-display').textContent = data.submission_token;
+    document.getElementById('modal').classList.add('open');
+    if (data.flagged) toast('Report submitted but flagged for review', 4000);
+    dashLoaded = false; // Force dashboard reload
+  } catch(e) {
+    if (e.message === '429') {
+      errEl.textContent = 'Too many submissions from this connection. Please try again later.';
+    } else {
+      errEl.textContent = 'Could not connect to server. Please ensure the backend is running.';
+    }
+    errEl.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    document.getElementById('submit-text').textContent = 'Submit Anonymous Report';
+  }
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  show('home');
+}
+
+// ── Dashboard ─────────────────────────────────────────────────
+async function loadDashboard() {
+  try {
+    const [summary, states, trend, debt, pressure, districts] = await Promise.all([
+      apiFetch('/api/dashboard/summary'),
+      apiFetch('/api/dashboard/states'),
+      apiFetch('/api/dashboard/monthly-trend'),
+      apiFetch('/api/dashboard/debt-distribution'),
+      apiFetch('/api/dashboard/pressure-types'),
+      apiFetch('/api/dashboard/districts'),
+    ]);
+
+    renderKPIs(summary);
+    buildStateFilters(states);
+    renderStatesChart(states);
+    renderTrendChart(trend);
+    renderDebtChart(debt);
+    renderPressureChart(pressure);
+    renderDistrictTable(districts);
+    renderMap(districts);
+  } catch(e) {
+    console.error('Dashboard load failed:', e);
+    document.getElementById('kpi-row').innerHTML = '<div style="grid-column:1/-1" class="error-state">⚠️ Backend not connected. Start the FastAPI server and refresh.</div>';
+  }
+}
+
+function renderKPIs(d) {
+  document.getElementById('kpi-row').innerHTML = `
+    <div class="kpi"><div class="kpi-lbl">Total Reports</div><div class="kpi-val">${d.total_reports.toLocaleString('en-IN')}</div><div class="kpi-sub">anonymous submissions</div></div>
+    <div class="kpi"><div class="kpi-lbl">Districts Covered</div><div class="kpi-val">${d.districts_covered}</div><div class="kpi-sub">across India</div></div>
+    <div class="kpi"><div class="kpi-lbl">Avg Debt Burden</div><div class="kpi-val">₹${fmtAmount(d.median_debt)}</div><div class="kpi-sub">per family</div></div>
+    <div class="kpi"><div class="kpi-lbl">Ongoing Coercion</div><div class="kpi-val">${d.ongoing_coercion_pct}%</div><div class="kpi-sub">post-marriage demands</div></div>`;
+}
+
+function buildStateFilters(states) {
+  const f = document.getElementById('state-filters');
+  const extra = states.slice(0,6).map(s =>
+    `<span class="ftag" onclick="filterDash(this,'${s.state}')">${s.state}</span>`
+  ).join('');
+  f.innerHTML = `<span class="ftag on" onclick="filterDash(this,'all')">All India</span>${extra}`;
+}
+
+function filterDash(el, state) {
+  document.querySelectorAll('.ftag').forEach(t => t.classList.remove('on'));
+  el.classList.add('on');
+  // Future: re-query API with state filter
+  toast(state === 'all' ? 'Showing all India data' : `Filtered: ${state}`);
+}
+
+// ── D3 Charts ─────────────────────────────────────────────────
+function renderStatesChart(data) {
+  const el = document.getElementById('chart-states');
+  el.innerHTML = '';
+  const m = {top:10,right:20,bottom:80,left:50};
+  const w = el.clientWidth - m.left - m.right;
+  const h = 280 - m.top - m.bottom;
+
+  const svg = d3.select(el).append('svg')
+    .attr('width', w + m.left + m.right)
+    .attr('height', h + m.top + m.bottom)
+    .attr('class','bar-d3')
+    .append('g').attr('transform', `translate(${m.left},${m.top})`);
+
+  const top = data.slice(0, 8);
+  const x = d3.scaleBand().range([0, w]).padding(0.35).domain(top.map(d => d.state));
+  const y = d3.scaleLinear().range([h, 0]).domain([0, d3.max(top, d => d.count) * 1.1]);
+
+  svg.append('g').attr('class','axis').attr('transform', `translate(0,${h})`).call(d3.axisBottom(x))
+    .selectAll('text').attr('transform','rotate(-35)').attr('text-anchor','end').attr('dx','-.5em').attr('dy','.1em');
+  svg.append('g').attr('class','axis').call(d3.axisLeft(y).ticks(5).tickFormat(d3.format('.0f')));
+
+  svg.selectAll('.bar').data(top).enter().append('rect')
+    .attr('class','bar').attr('x', d => x(d.state))
+    .attr('y', d => y(d.count)).attr('width', x.bandwidth())
+    .attr('height', d => h - y(d.count)).attr('rx', 4)
+    .attr('fill', '#9B2335')
+    .on('mouseover', function(e, d) {
+      d3.select(this).attr('opacity',.7);
+      toast(`${d.state}: ${d.count} reports, avg debt ₹${fmtAmount(d.avg_debt)}`);
+    })
+    .on('mouseout', function() { d3.select(this).attr('opacity',1); });
+}
+
+function renderTrendChart(data) {
+  const el = document.getElementById('chart-trend');
+  el.innerHTML = '';
+  if (!data.length) return;
+  const m = {top:10,right:20,bottom:40,left:45};
+  const w = el.clientWidth - m.left - m.right;
+  const h = 200 - m.top - m.bottom;
+
+  const svg = d3.select(el).append('svg')
+    .attr('width', w + m.left + m.right)
+    .attr('height', h + m.top + m.bottom)
+    .attr('class','line-d3')
+    .append('g').attr('transform', `translate(${m.left},${m.top})`);
+
+  const x = d3.scalePoint().range([0, w]).domain(data.map(d => d.month)).padding(0.1);
+  const y = d3.scaleLinear().range([h, 0]).domain([0, d3.max(data, d => d.count) * 1.15]);
+
+  svg.append('g').attr('class','axis').attr('transform', `translate(0,${h})`).call(
+    d3.axisBottom(x).tickValues(data.filter((_,i) => i % Math.max(1, Math.floor(data.length/5)) === 0).map(d => d.month))
+  ).selectAll('text').attr('transform','rotate(-30)').attr('text-anchor','end');
+  svg.append('g').attr('class','axis').call(d3.axisLeft(y).ticks(4));
+
+  // Area
+  const area = d3.area().x(d => x(d.month)).y0(h).y1(d => y(d.count)).curve(d3.curveMonotoneX);
+  svg.append('path').datum(data).attr('d', area).attr('fill', 'rgba(155,35,53,0.08)');
+
+  // Line
+  const line = d3.line().x(d => x(d.month)).y(d => y(d.count)).curve(d3.curveMonotoneX);
+  svg.append('path').datum(data).attr('class','line').attr('d', line);
+
+  // Dots
+  svg.selectAll('.dot').data(data).enter().append('circle')
+    .attr('class','dot').attr('cx', d => x(d.month)).attr('cy', d => y(d.count))
+    .attr('r', 4);
+}
+
+function renderDebtChart(data) {
+  const el = document.getElementById('chart-debt');
+  el.innerHTML = '';
+  const m = {top:10,right:20,bottom:60,left:50};
+  const w = el.clientWidth - m.left - m.right;
+  const h = 200 - m.top - m.bottom;
+
+  const svg = d3.select(el).append('svg')
+    .attr('width', w + m.left + m.right)
+    .attr('height', h + m.top + m.bottom)
+    .attr('class','bar-d3')
+    .append('g').attr('transform', `translate(${m.left},${m.top})`);
+
+  const colors = ['#FECACA','#FCA5A5','#F87171','#EF4444','#DC2626','#9B2335'];
+  const x = d3.scaleBand().range([0, w]).padding(0.3).domain(data.map(d => d.bucket));
+  const y = d3.scaleLinear().range([h, 0]).domain([0, d3.max(data, d => d.count) * 1.15]);
+
+  svg.append('g').attr('class','axis').attr('transform', `translate(0,${h})`).call(d3.axisBottom(x))
+    .selectAll('text').attr('transform','rotate(-35)').attr('text-anchor','end').attr('dx','-.5em');
+  svg.append('g').attr('class','axis').call(d3.axisLeft(y).ticks(4));
+
+  svg.selectAll('.bar').data(data).enter().append('rect')
+    .attr('class','bar').attr('x', d => x(d.bucket))
+    .attr('y', d => y(d.count)).attr('width', x.bandwidth())
+    .attr('height', d => h - y(d.count)).attr('rx', 4)
+    .attr('fill', (d, i) => colors[i]);
+}
+
+function renderPressureChart(data) {
+  const el = document.getElementById('chart-pressure');
+  el.innerHTML = '';
+  const top = data.slice(0, 8);
+  const m = {top:10,right:60,bottom:10,left:200};
+  const w = el.clientWidth - m.left - m.right;
+  const h = Math.max(180, top.length * 26) - m.top - m.bottom;
+
+  const svg = d3.select(el).append('svg')
+    .attr('width', w + m.left + m.right)
+    .attr('height', h + m.top + m.bottom)
+    .attr('class','bar-d3')
+    .append('g').attr('transform', `translate(${m.left},${m.top})`);
+
+  const x = d3.scaleLinear().range([0, w]).domain([0, d3.max(top, d => d.count)]);
+  const y = d3.scaleBand().range([0, h]).padding(0.25).domain(top.map(d => d.type));
+
+  svg.append('g').attr('class','axis').call(d3.axisLeft(y));
+  svg.selectAll('.bar').data(top).enter().append('rect')
+    .attr('class','bar').attr('x', 0).attr('y', d => y(d.type))
+    .attr('width', d => x(d.count)).attr('height', y.bandwidth()).attr('rx', 4).attr('fill', '#9B2335');
+
+  svg.selectAll('.lbl').data(top).enter().append('text')
+    .attr('x', d => x(d.count) + 6).attr('y', d => y(d.type) + y.bandwidth()/2)
+    .attr('dominant-baseline','central').attr('font-size','11px').attr('fill','#6B4E4A').text(d => d.count);
+}
+
+function renderDistrictTable(data) {
+  const top = data.slice(0, 15);
+  const el = document.getElementById('district-table');
+  el.innerHTML = `<table class="data-table">
+    <thead><tr><th>#</th><th>District</th><th>State</th><th>Reports</th><th>Avg Debt</th><th>Risk Score</th></tr></thead>
+    <tbody>${top.map((d,i) => `<tr>
+      <td style="color:var(--ink-s);font-size:.75rem">${i+1}</td>
+      <td><strong>${d.district}</strong></td>
+      <td style="color:var(--ink-s)">${d.state}</td>
+      <td><strong style="color:var(--crim)">${d.count}</strong></td>
+      <td>₹${fmtAmount(d.avg_debt)}</td>
+      <td>
+        <div class="fraud-meter">
+          <div class="fraud-bar"><div class="fraud-fill" style="width:${d.risk_score}%;background:${d.risk_score>70?'#DC2626':d.risk_score>40?'#D97706':'#16A34A'}"></div></div>
+          <span style="font-size:.75rem;color:var(--ink-s);min-width:28px">${d.risk_score}</span>
+        </div>
+      </td>
+    </tr>`).join('')}</tbody></table>`;
+}
+
+function renderMap(districts) {
+  const el = document.getElementById('india-map');
+  const tooltip = document.getElementById('map-tip');
+  const w = el.clientWidth, h = 340;
+  el.querySelectorAll('svg').forEach(s => s.remove());
+
+  const svg = d3.select(el).insert('svg', '.map-tooltip')
+    .attr('width', w).attr('height', h);
+
+  // District dots as bubble map (simplified — no TopoJSON dependency needed)
+  const DISTRICT_COORDS = {
+    'Lucknow':[82.0,26.8],'Kanpur':[80.3,26.4],'Agra':[78.0,27.1],'Varanasi':[83.0,25.3],
+    'Meerut':[77.7,28.9],'Patna':[85.1,25.6],'Gaya':[85.0,24.8],'Muzaffarpur':[85.4,26.1],
+    'Jaipur':[75.7,26.9],'Jodhpur':[73.0,26.2],'Udaipur':[73.7,24.6],'Kota':[75.8,25.2],
+    'Gurgaon':[77.0,28.4],'Faridabad':[77.3,28.4],'Hisar':[75.7,29.1],'Rohtak':[76.6,28.9],
+    'Bhopal':[77.4,23.3],'Indore':[75.8,22.7],'Jabalpur':[79.9,23.2],'Gwalior':[78.2,26.2],
+    'Pune':[73.9,18.5],'Nagpur':[79.1,21.1],'Nashik':[73.8,20.0],'Aurangabad':[75.3,19.9],
+    'Ahmedabad':[72.6,23.0],'Surat':[72.8,21.2],'Vadodara':[73.2,22.3],'Rajkot':[70.8,22.3],
+    'Kolkata':[88.4,22.6],'Howrah':[88.3,22.6],'Durgapur':[87.3,23.5],'Asansol':[87.0,23.7],
+    'Bhagalpur':[86.9,25.2],'Darbhanga':[85.9,26.1],'Siwan':[84.4,26.2],'Nalanda':[85.4,25.0],
+    'Alwar':[76.6,27.6],'Bharatpur':[77.5,27.2],'Ajmer':[74.6,26.5],'Bikaner':[73.3,28.0],
+    'Panipat':[76.9,29.4],'Ambala':[76.8,30.4],'Karnal':[77.0,29.7],'Sonipat':[77.0,28.9],
+    'Sagar':[78.7,23.8],'Rewa':[81.3,24.5],'Ujjain':[75.8,23.2],'Chhindwara':[78.9,22.1],
+    'Solapur':[75.9,17.7],'Kolhapur':[74.2,16.7],'Nanded':[77.3,19.2],'Sangli':[74.6,16.9],
+  };
+
+  // India bounding box (approx): lon 68–97, lat 8–37
+  const lonScale = d3.scaleLinear().domain([68, 97]).range([w*0.05, w*0.95]);
+  const latScale = d3.scaleLinear().domain([8, 37]).range([h*0.95, h*0.05]);
+
+  const maxCount = d3.max(districts, d => d.count) || 1;
+  const rScale = d3.scaleSqrt().domain([0, maxCount]).range([4, 22]);
+  const colorScale = d3.scaleSequential(d3.interpolateReds).domain([0, maxCount]);
+
+  // India outline (simplified polygon)
+  const indiaPoints = [
+    [68,23],[69,22],[70,20],[72,19],[73,15],[76,10],[78,8],[80,9],[82,10],
+    [84,12],[86,13],[88,22],[89,24],[90,26],[92,27],[94,28],[96,28],[97,27],
+    [96,24],[93,22],[91,24],[90,24],[88,24],[87,22],[85,22],[83,22],[82,24],
+    [80,28],[78,30],[76,32],[74,34],[72,36],[70,34],[68,32],[67,28],[68,23]
+  ].map(([lon,lat]) => [lonScale(lon), latScale(lat)]);
+
+  svg.append('path')
+    .attr('d', 'M' + indiaPoints.map(p => p.join(',')).join('L') + 'Z')
+    .attr('fill','#F5EDE8').attr('stroke','#D4BCB4').attr('stroke-width','1.5');
+
+  // Plot district bubbles
+  districts.forEach(d => {
+    const coords = DISTRICT_COORDS[d.district];
+    if (!coords) return;
+    const [lon, lat] = coords;
+    const cx = lonScale(lon), cy = latScale(lat);
+
+    svg.append('circle')
+      .attr('cx', cx).attr('cy', cy)
+      .attr('r', rScale(d.count))
+      .attr('fill', colorScale(d.count))
+      .attr('fill-opacity', 0.75)
+      .attr('stroke', '#9B2335').attr('stroke-width', 0.5)
+      .style('cursor','pointer')
+      .on('mouseover', function(e) {
+        d3.select(this).attr('r', rScale(d.count) * 1.3).attr('fill-opacity', 1);
+        tooltip.style.display = 'block';
+        tooltip.style.left = (cx + 12) + 'px';
+        tooltip.style.top = (cy - 30) + 'px';
+        tooltip.innerHTML = `<strong>${d.district}</strong>${d.state}<br>${d.count} reports — avg debt ₹${fmtAmount(d.avg_debt)} avg debt`;
+      })
+      .on('mouseout', function() {
+        d3.select(this).attr('r', rScale(d.count)).attr('fill-opacity', 0.75);
+        tooltip.style.display = 'none';
+      });
+  });
+}
+
+// ── Resources tabs ────────────────────────────────────────────
+function rtab(name, el) {
+  ['help','legal','research'].forEach(t => {
+    document.getElementById('res-' + t).style.display = t === name ? '' : 'none';
+  });
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  el.classList.add('on');
+}
+
+// ── Admin ─────────────────────────────────────────────────────
+async function adminLogin() {
+  const user = document.getElementById('admin-user').value;
+  const pass = document.getElementById('admin-pass').value;
+  const creds = btoa(`${user}:${pass}`);
+  try {
+    await fetch(`${API}/api/admin/stats`, { headers: { Authorization: `Basic ${creds}` } })
+      .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+      .then(data => {
+        window._adminCreds = creds;
+        document.getElementById('admin-login').style.display = 'none';
+        document.getElementById('admin-panel').style.display = 'block';
+        loadAdminOverview();
+      });
+  } catch(e) {
+    document.getElementById('login-err').style.display = 'block';
+    setTimeout(() => document.getElementById('login-err').style.display = 'none', 3000);
+  }
+}
+
+async function adminFetch(path) {
+  const r = await fetch(API + path, { headers: { Authorization: `Basic ${window._adminCreds}` } });
+  if (!r.ok) throw new Error(r.status);
+  return r.json();
+}
+
+async function adminPatch(path, body) {
+  const r = await fetch(API + path, {
+    method: 'PATCH',
+    headers: { Authorization: `Basic ${window._adminCreds}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  return r.json();
+}
+
+function adminPane(name, el) {
+  document.querySelectorAll('.admin-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById('pane-' + name).classList.add('active');
+  document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+  if (el) el.classList.add('active');
+  if (name === 'reports') loadAdminReports();
+  if (name === 'fraud') loadFraudQueue();
+  if (name === 'verified') loadVerified();
+}
+
+async function loadAdminOverview() {
+  const data = await adminFetch('/api/admin/stats');
+  document.getElementById('ak-total').innerHTML = data.total;
+  document.getElementById('ak-pending').innerHTML = data.pending;
+  document.getElementById('ak-flagged').innerHTML = `<span style="color:var(--crim)">${data.flagged}</span>`;
+  document.getElementById('ak-today').innerHTML = data.today;
+  renderFraudGauge(data.avg_fraud_score);
+  renderStatusPie({verified: data.verified, pending: data.pending, flagged: data.flagged, rejected: data.rejected});
+}
+
+function renderFraudGauge(score) {
+  const el = document.getElementById('fraud-gauge');
+  el.innerHTML = '';
+  const pct = Math.round(score * 100);
+  const color = score > 0.5 ? '#DC2626' : score > 0.3 ? '#D97706' : '#16A34A';
+  el.innerHTML = `
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:.5rem">
+      <div style="font-family:var(--fd);font-size:2.5rem;font-weight:700;color:${color}">${pct}%</div>
+      <div style="font-size:.78rem;color:var(--ink-s)">Average Fraud Score</div>
+      <div style="width:120px;height:8px;background:#F3F4F6;border-radius:4px;overflow:hidden">
+        <div style="height:100%;background:${color};border-radius:4px;width:${pct}%"></div>
+      </div>
+      <div style="font-size:.72rem;color:${color};font-weight:600">${pct < 25 ? 'Dataset clean' : pct < 50 ? 'Moderate fraud detected' : 'High fraud rate'}</div>
+    </div>`;
+}
+
+function renderStatusPie(data) {
+  const el = document.getElementById('admin-status-chart');
+  el.innerHTML = '';
+  const total = Object.values(data).reduce((a,b) => a+b, 0) || 1;
+  const items = [
+    {label:'Pending', val:data.pending, color:'#D97706'},
+    {label:'Verified', val:data.verified, color:'#16A34A'},
+    {label:'Flagged', val:data.flagged, color:'#DC2626'},
+    {label:'Rejected', val:data.rejected, color:'#9CA3AF'},
+  ];
+  el.innerHTML = `<div style="display:flex;flex-direction:column;gap:.5rem;padding:.5rem 0">` +
+    items.map(i => `<div style="display:flex;align-items:center;gap:.65rem">
+      <div style="width:10px;height:10px;border-radius:50%;background:${i.color};flex-shrink:0"></div>
+      <div style="font-size:.78rem;flex:1">${i.label}</div>
+      <div style="font-size:.78rem;font-weight:600;color:var(--ink)">${i.val}</div>
+      <div style="width:80px;height:5px;background:#F3F4F6;border-radius:3px;overflow:hidden">
+        <div style="height:100%;background:${i.color};border-radius:3px;width:${Math.round(i.val/total*100)}%"></div>
+      </div>
+    </div>`).join('') + `</div>`;
+}
+
+async function loadAdminReports(page=1) {
+  currentAdminPage = page;
+  const filter = document.getElementById('status-filter').value;
+  const url = `/api/admin/reports?page=${page}&per_page=15${filter ? '&status_filter='+filter : ''}`;
+  const data = await adminFetch(url);
+  renderReportTable(data, 'reports-table', 'reports-pagination');
+}
+
+async function loadFraudQueue() {
+  const data = await adminFetch('/api/admin/fraud-queue');
+  renderReportTable({reports: data, total: data.length}, 'fraud-table', null);
+}
+
+async function loadVerified() {
+  const data = await adminFetch('/api/admin/reports?status_filter=verified&per_page=50');
+  renderReportTable(data, 'verified-table', null);
+}
+
+function renderReportTable(data, tableId, paginationId) {
+  const el = document.getElementById(tableId);
+  if (!data.reports?.length) { el.innerHTML = '<div class="error-state">No reports found.</div>'; return; }
+  el.innerHTML = `<table class="data-table">
+    <thead><tr><th>Token</th><th>State / District</th><th>Year</th><th>Debt</th><th>Ongoing</th><th>Fraud Score</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>${data.reports.map(r => `<tr>
+      <td style="font-family:monospace;font-size:.72rem;color:var(--ink-s)">${r.submission_token}</td>
+      <td><strong>${r.district}</strong><br><span style="font-size:.72rem;color:var(--ink-s)">${r.state}</span></td>
+      <td>${r.year_of_marriage || '—'}</td>
+      <td>₹${fmtAmount(r.debt_amount)}</td>
+      <td style="font-size:.75rem">${(r.ongoing_coercion||'—').split('—')[0]}</td>
+      <td>
+        <div class="fraud-meter">
+          <div class="fraud-bar"><div class="fraud-fill" style="width:${r.fraud_score*100}%;background:${r.fraud_score>.7?'#DC2626':r.fraud_score>.4?'#D97706':'#16A34A'}"></div></div>
+          <span style="font-size:.72rem;color:var(--ink-s)">${(r.fraud_score*100).toFixed(0)}%</span>
+        </div>
+      </td>
+      <td><span class="pill ${r.status}">${r.status}</span></td>
+      <td style="display:flex;gap:.35rem;flex-wrap:wrap">
+        ${r.status !== 'verified' ? `<button onclick="updateStatus(${r.id},'verified')" style="font-size:.68rem;padding:.2rem .5rem;border:1px solid #16A34A;color:#16A34A;background:none;border-radius:4px;cursor:pointer">Verify</button>` : ''}
+        ${r.status !== 'rejected' ? `<button onclick="updateStatus(${r.id},'rejected')" style="font-size:.68rem;padding:.2rem .5rem;border:1px solid #DC2626;color:#DC2626;background:none;border-radius:4px;cursor:pointer">✕ Reject</button>` : ''}
+      </td>
+    </tr>`).join('')}</tbody></table>`;
+
+  if (paginationId && data.pages > 1) {
+    const pg = document.getElementById(paginationId);
+    pg.innerHTML = Array.from({length: Math.min(data.pages, 10)}, (_,i) => i+1).map(p =>
+      `<button onclick="loadAdminReports(${p})" style="padding:.3rem .65rem;border:1px solid var(--border);border-radius:5px;background:${p===currentAdminPage?'var(--crim)':'#fff'};color:${p===currentAdminPage?'#fff':'var(--ink)'};cursor:pointer;font-size:.78rem">${p}</button>`
+    ).join('');
+  }
+}
+
+async function updateStatus(id, status) {
+  try {
+    await adminPatch(`/api/admin/reports/${id}/status`, { status });
+    toast(`Report marked as ${status}`);
+    loadAdminReports(currentAdminPage);
+    loadAdminOverview();
+  } catch(e) { toast('Update failed'); }
+}
+
+// ── Init ─────────────────────────────────────────────────────
+loadHomeStats();
+</script>
+</body>
+</html>
