@@ -141,12 +141,17 @@ def get_debt_distribution(db: Session):
 
 def get_monthly_trend(db: Session):
     rows = db.query(
-        func.strftime('%Y-%m', Report.created_at).label("month"),
+        func.to_char(Report.created_at, 'Mon YYYY').label("month"),
         func.count(Report.id).label("count")
     ).filter(
         Report.status != ReportStatus.rejected,
         Report.created_at >= datetime.utcnow() - timedelta(days=365)
-    ).group_by("month").order_by("month").all()
+    ).group_by(
+        func.to_char(Report.created_at, 'Mon YYYY'),
+        func.date_trunc('month', Report.created_at)
+    ).order_by(
+        func.date_trunc('month', Report.created_at)
+    ).all()
 
     return [{"month": r.month, "count": r.count} for r in rows]
 
